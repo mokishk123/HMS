@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hms_patients_tree" model="ir.ui.view">
+        <field name="name">hms.patients.tree</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <tree string="Hms Patients">
+<!--                <field name="image" widget="image" optional="show"/>-->
+                <field name="first_name" optional="show"/>
+                <field name="last_name" optional="show"/>
+                <field name="birth_date" optional="hide"/>
+                <field name="age" optional="show"/>
+                <field name="address" optional="hide"/>
+                <field name="history" optional="hide"/>
+                <field name="cr_ratio" optional="show"/>
+                <field name="blood_type" optional="show"/>
+                <field name="pcr" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hms_patients_form" model="ir.ui.view">
+        <field name="name">hms.patients.form</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <form string="Hms Patients">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="image" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="birth_date"/>
+                            <field name="age"/>
+                            <field name="address"/>
+                        </group>
+                        <group>
+                            <field name="history"/>
+                            <field name="cr_ratio"/>
+                            <field name="blood_type"/>
+                            <field name="pcr"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hms_patients" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">hms.patient</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new patient
+            </p>
+        </field>
+    </record>
+
+</odoo>
