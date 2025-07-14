@@ -24,5 +24,52 @@ class HmsPatient(models.Model):
          ('o-', 'O-'),
          ],
         string="Blood Type", required=True, tracking=True)
+    states = fields.Selection(
+        [('undetermined', 'Undetermined'),
+         ('good', 'Good'),
+         ('fair', 'Fair'),
+         ('serious', 'Serious'),
+         ],
+        string="States", default='undetermined')
     pcr = fields.Boolean(string="PCR", required=True, tracking=True)
     image = fields.Image(string="Image")
+    department_id = fields.Many2one('hms.department', string="Department")
+
+
+    # for undetermined
+
+    def action_undetermined(self):
+        for rec in self:
+            rec.states = 'undetermined'
+
+            # rec.write({
+            #     'states':'undetermined'
+            # })
+
+    # for good
+
+
+    def action_good(self):
+        for rec in self:
+            rec.states = 'good'
+            # rec.write({
+            #     'states':'good'
+            # })
+
+    # for fair
+
+    def action_fair(self):
+        for rec in self:
+            rec.states = 'fair'
+            # rec.write({
+            #     'states':'fair'
+            # })
+
+    # for serious
+
+    def action_serious(self):
+        for rec in self:
+            rec.states = 'serious'
+            # rec.write({
+            #     'states':'serious'
+            # })

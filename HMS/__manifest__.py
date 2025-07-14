@@ -9,7 +9,8 @@
     "data": [
         "security/ir.model.access.csv",
         "views/hms_patients_view.xml",
+        "views/hms_doctors_view.xml",
+        "views/hms_department_view.xml",
         "views/menu.xml",
     ]
-
 }

@@ -6,11 +6,13 @@
         <field name="model">hms.patient</field>
         <field name="arch" type="xml">
             <tree string="Hms Patients">
-<!--                <field name="image" widget="image" optional="show"/>-->
+                <field name="image" widget="image" optional="hide"/>
                 <field name="first_name" optional="show"/>
                 <field name="last_name" optional="show"/>
+                <field name="department_id" optional="show"/>
                 <field name="birth_date" optional="hide"/>
                 <field name="age" optional="show"/>
+                <field name="states" optional="show"/>
                 <field name="address" optional="hide"/>
                 <field name="history" optional="hide"/>
                 <field name="cr_ratio" optional="show"/>
@@ -26,6 +28,14 @@
         <field name="arch" type="xml">
             <form string="Hms Patients">
                 <sheet>
+                    <header>
+                        <button name="action_undetermined" type="object" class="btn-primary" string="Undetermined"/>
+                        <button name="action_good" type="object" class="btn-primary" string="Good"/>
+                        <button name="action_fair" type="object" class="btn-primary" string="Fair"/>
+                        <button name="action_serious" type="object" class="btn-primary" string="Serious"/>
+                        <field name="states" widget="statusbar"/>
+                        <!--                        options="{'clickable':1}"-->
+                    </header>
                     <group>
                         <group>
                             <field name="image" widget="image" class="oe_avatar"/>
@@ -42,6 +52,9 @@
                             <field name="cr_ratio"/>
                             <field name="blood_type"/>
                             <field name="pcr"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
                         </group>
                     </group>
                 </sheet>
