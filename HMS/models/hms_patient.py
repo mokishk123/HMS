@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HmsPatient(models.Model):
@@ -33,8 +34,19 @@ class HmsPatient(models.Model):
         string="States", default='undetermined')
     pcr = fields.Boolean(string="PCR", required=True, tracking=True)
     image = fields.Image(string="Image")
+    email = fields.Char(string='Email', index=True, required=True)
     department_id = fields.Many2one('hms.department', string="Department")
 
+    # SQL constraints
+    _sql_constraints = [
+        ('unique_email', 'unique("email")', 'This email is exist!')
+    ]
+
+    @api.constrains('email')
+    def _check_email(self):
+        for record in self:
+            if record.email and '@' not in record.email:
+                raise ValidationError("Invalid email format")
 
     # for undetermined
 
@@ -47,7 +59,6 @@ class HmsPatient(models.Model):
             # })
 
     # for good
-
 
     def action_good(self):
         for rec in self:

@@ -46,6 +46,7 @@
                             <field name="birth_date"/>
                             <field name="age"/>
                             <field name="address"/>
+                            <field name="email"/>
                         </group>
                         <group>
                             <field name="history"/>

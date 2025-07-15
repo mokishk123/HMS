@@ -12,21 +12,21 @@
     />
 
     <menuitem id="menu_hms_patients"
-              name="Hms Patient"
+              name="Patient"
               parent="menu_frontdesk_hms"
               action="action_hms_patients"
     />
 
 
     <menuitem id="menu_hms_doctors"
-              name="Hms Doctors"
+              name="Doctors"
               parent="menu_frontdesk_hms"
               action="action_hms_doctors"
     />
 
 
     <menuitem id="menu_hms_department"
-              name="Hms Department"
+              name="Department"
               parent="menu_frontdesk_hms"
               action="action_hms_department"
     />
