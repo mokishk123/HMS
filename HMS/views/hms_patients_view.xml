@@ -49,13 +49,13 @@
                             <field name="email"/>
                         </group>
                         <group>
-                            <field name="history"/>
+                            <field name="history" invisible="age > 50"/>
                             <field name="cr_ratio"/>
                             <field name="blood_type"/>
                             <field name="pcr"/>
                         </group>
                         <group>
-                            <field name="department_id"/>
+                            <field name="department_id" domain="[('is_opened', '=', True)]"/>
                             <field name="log_history_ids"/>
                         </group>
                     </group>
