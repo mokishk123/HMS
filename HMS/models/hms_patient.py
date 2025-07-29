@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -84,3 +84,64 @@ class HmsPatient(models.Model):
             # rec.write({
             #     'states':'serious'
             # })
+
+    log_history_ids = fields.One2many(
+        'log.history',
+        'patient_id',
+        string='Log History',
+        readonly=True
+    )
+
+    @api.model
+    def create(self, vals):
+
+        patient = super(HmsPatient, self).create(vals)
+
+        self.env['log.history'].create({
+            'patient_id': patient.id,
+            'description': _('Patient record created.'),
+        })
+        return patient
+
+    def write(self, vals):
+        for patient in self:
+            old_states = patient.states
+            result = super(HmsPatient, patient).write(vals)
+
+            if 'state' in vals and patient.states != old_states:
+                self.env['log.history'].create({
+                    'patient_id': patient.id,
+                    'description': _('State changed from %s to %s.') % (old_states, patient.states),
+                })
+            return result
+
+
+class LogHistory(models.Model):
+
+    _name = 'log.history'
+    _description = 'Patient Log History'
+    _order = 'create_date desc'
+
+    create_uid = fields.Many2one(
+        'res.users',
+        string='Created By',
+        readonly=True
+    )
+
+    create_date = fields.Datetime(
+        string='Creation Date',
+        readonly=True
+    )
+
+    description = fields.Text(
+        string='Description',
+        readonly=True
+    )
+
+    patient_id = fields.Many2one(
+        'hms.patient',
+        string='Patient',
+        required=True,
+        ondelete='cascade',
+        readonly=True
+    )
