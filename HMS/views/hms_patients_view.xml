@@ -27,15 +27,15 @@
         <field name="model">hms.patient</field>
         <field name="arch" type="xml">
             <form string="Hms Patients">
+                <header>
+                    <button name="action_undetermined" type="object" class="btn-primary" string="Undetermined"/>
+                    <button name="action_good" type="object" class="btn-primary" string="Good"/>
+                    <button name="action_fair" type="object" class="btn-primary" string="Fair"/>
+                    <button name="action_serious" type="object" class="btn-primary" string="Serious"/>
+                    <field name="states" widget="statusbar"/>
+                    <!--                        options="{'clickable':1}"-->
+                </header>
                 <sheet>
-                    <header>
-                        <button name="action_undetermined" type="object" class="btn-primary" string="Undetermined"/>
-                        <button name="action_good" type="object" class="btn-primary" string="Good"/>
-                        <button name="action_fair" type="object" class="btn-primary" string="Fair"/>
-                        <button name="action_serious" type="object" class="btn-primary" string="Serious"/>
-                        <field name="states" widget="statusbar"/>
-                        <!--                        options="{'clickable':1}"-->
-                    </header>
                     <group>
                         <group>
                             <field name="image" widget="image" class="oe_avatar"/>
@@ -49,16 +49,28 @@
                             <field name="email"/>
                         </group>
                         <group>
-                            <field name="history" invisible="age > 50"/>
-                            <field name="cr_ratio"/>
+                            <field name="history" invisible="age &lt; 50"/>
+                            <field name="cr_ratio" required="pcr"/>
                             <field name="blood_type"/>
                             <field name="pcr"/>
                         </group>
                         <group>
                             <field name="department_id" domain="[('is_opened', '=', True)]"/>
-                            <field name="log_history_ids"/>
+                            <field name="capacity" invisible="not department_id"/>
+                            <field name="doctor_ids" readonly="not department_id" widget="many2many_tags"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Log History">
+                            <field name="log_history_ids">
+                                <tree>
+                                    <field name="create_uid"/>
+                                    <field name="create_date"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>

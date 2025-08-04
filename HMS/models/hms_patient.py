@@ -1,3 +1,4 @@
+from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -6,10 +7,11 @@ class HmsPatient(models.Model):
     _name = 'hms.patient'
     _inherit = ['mail.thread']
     _description = 'Hms Patient'
+    _rec_name = 'first_name'
 
     first_name = fields.Char(string="First Name", required=True, tracking=True)
     last_name = fields.Char(string="Last Name", required=True, tracking=True)
-    age = fields.Integer(string="Age", required=True, tracking=True)
+    age = fields.Integer(string="Age", required=True, tracking=True, compute="_compute_age")
     birth_date = fields.Date(string="Birth Day", required=True, tracking=True)
     address = fields.Text(string="Address", required=True, tracking=True)
     history = fields.Html(string="History")
@@ -36,6 +38,8 @@ class HmsPatient(models.Model):
     image = fields.Image(string="Image")
     email = fields.Char(string='Email', index=True, required=True)
     department_id = fields.Many2one('hms.department', string="Department")
+    capacity = fields.Integer(related='department_id.capacity')
+    doctor_ids = fields.Many2many('hms.doctor')
 
     # SQL constraints
     _sql_constraints = [
@@ -47,6 +51,46 @@ class HmsPatient(models.Model):
         for record in self:
             if record.email and '@' not in record.email:
                 raise ValidationError("Invalid email format")
+
+    @api.depends('birth_date')
+    def _compute_age(self):
+        for record in self:
+            if record.birth_date:
+                today = date.today()
+                born = record.birth_date
+                age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+                record.age = age
+            else:
+                record.age = 0
+
+    @api.onchange('pcr')
+    def _check_cr_ratio(self):
+        for record in self:
+            if record.pcr and record.cr_ratio <= 0.0:
+                return {
+                    'warning': {
+                        'title': ('CR Ratio'),
+                        'message': 'CR Ratio is Required'
+                    }
+                }
+
+    @api.onchange('age')
+    def _check_cr_ratio(self):
+        for record in self:
+            if record.age <= 30:
+                record.pcr = True
+                return {
+                    'warning': {
+                        'title': ('PCR'),
+                        'message': 'PCR was Checked'
+                    }
+                }
+
+    @api.constrains('birth_date')
+    def _check_birth_date(self):
+        for record in self:
+            if record.birth_date and record.birth_date > date.today():
+                raise ValidationError("The age must be positive")
 
     # for undetermined
 
@@ -108,7 +152,7 @@ class HmsPatient(models.Model):
             old_states = patient.states
             result = super(HmsPatient, patient).write(vals)
 
-            if 'state' in vals and patient.states != old_states:
+            if 'states' in vals and patient.states != old_states:
                 self.env['log.history'].create({
                     'patient_id': patient.id,
                     'description': _('State changed from %s to %s.') % (old_states, patient.states),
@@ -117,7 +161,6 @@ class HmsPatient(models.Model):
 
 
 class LogHistory(models.Model):
-
     _name = 'log.history'
     _description = 'Patient Log History'
     _order = 'create_date desc'
