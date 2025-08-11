@@ -36,7 +36,7 @@ class HmsPatient(models.Model):
         string="States", default='undetermined')
     pcr = fields.Boolean(string="PCR", required=True, tracking=True)
     image = fields.Image(string="Image")
-    email = fields.Char(string='Email', index=True, required=True)
+    email = fields.Char(string='Email', required=True)
     department_id = fields.Many2one('hms.department', string="Department")
     capacity = fields.Integer(related='department_id.capacity')
     doctor_ids = fields.Many2many('hms.doctor')
