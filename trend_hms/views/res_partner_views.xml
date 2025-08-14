@@ -17,6 +17,7 @@
         </field>
     </record>
 
+
     <!-- Show Website in customers tree view -->
     <record id="res_partner_tree_inherit_hms_lab03" model="ir.ui.view">
         <field name="name">res.partner.tree.inherit.hms.lab03</field>
