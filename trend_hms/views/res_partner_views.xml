@@ -1,35 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="view_partner_form_inherit_patient_link" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.patient.link</field>
+    <!-- Add Related Patient to Sales & Purchase / Misc group -->
+    <record id="res_partner_form_inherit_hms_lab03" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.hms.lab03</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='sales_purchases']" position="inside">
-                <group>
-                    <field name="related_patient_id"/>
-                </group>
+            <!-- Put it under Sales & Purchase tab, Misc group -->
+            <xpath expr="//page[@name='sales_purchases']//group[@name='misc']" position="inside">
+                <field name="related_patient_id" options="{'no_create': True}"/>
+            </xpath>
+            <!-- Make VAT required in the form as well -->
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="required">1</attribute>
             </xpath>
         </field>
     </record>
 
-    <record id="view_partner_tree_inherit_website" model="ir.ui.view">
-        <field name="name">res.partner.tree.inherit.website</field>
+    <!-- Show Website in customers tree view -->
+    <record id="res_partner_tree_inherit_hms_lab03" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit.hms.lab03</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='phone']" position="after">
+            <xpath expr="//tree" position="inside">
                 <field name="website"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="view_partner_form_inherit_vat_required" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.vat.required</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="attributes">
-                <attribute name="required">1</attribute>
             </xpath>
         </field>
     </record>
