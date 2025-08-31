@@ -40,6 +40,7 @@ class HmsPatient(models.Model):
     department_id = fields.Many2one('hms.department', string="Department")
     capacity = fields.Integer(related='department_id.capacity')
     doctor_ids = fields.Many2many('hms.doctor')
+    user_id = fields.Many2one("res.users", string="Owner", default=lambda self: self.env.user, index=True)
 
     # SQL constraints
     _sql_constraints = [

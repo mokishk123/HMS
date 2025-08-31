@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_hms_patient_status" model="ir.actions.report">
+        <field name="name">Patient Status Report</field>
+        <field name="model">hms.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hms.report_patient_status</field>
+        <field name="report_file">hms.report_patient_status</field>
+        <field name="print_report_name">'Patient - %s' % (object.name)</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_patient_status">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc"/>
+            <div class="page">
+                <h2>Patient Status Report</h2>
+                <div class="row mt16">
+                    <div class="col-6">
+                        <p><strong>Name:</strong> <span t-esc="doc.name"/></p>
+                        <p><strong>Age:</strong> <span t-esc="doc.age or 0"/></p>
+                        <p><strong>Department:</strong> <span t-esc="doc.department_id.name or '-'"/></p>
+                        <p><strong>Doctors:</strong>
+                            <t t-foreach="doc.doctor_ids" t-as="d" t-separator=", ">
+                                <span t-esc="d.name"/>
+                            </t>
+                            <t t-if="not doc.doctor_ids">-</t>
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>Birth date:</strong> <span t-esc="doc.birth_date or '-'"/></p>
+                        <p><strong>PCR:</strong> <span t-esc="doc.pcr or 0.0"/></p>
+                        <p><strong>Blood Type:</strong> <span t-esc="doc.blood_type or '-'"/></p>
+                        <p><strong>Email:</strong> <span t-esc="doc.email or '-'"/></p>
+                    </div>
+                </div>
+
+                <hr class="my-4"/>
+
+                <h4>User Date Info</h4>
+                <p>
+                    <strong>Printed By:</strong>
+                    <span t-esc="user.name"/> &nbsp;|&nbsp;
+                    <strong>Printed On:</strong>
+                    <span t-esc="(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                </p>
+
+                <h4 class="mt16">Log History</h4>
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Author</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="doc.message_ids">
+                            <t t-foreach="doc.message_ids.sorted(lambda m: (m.date or m.create_date))" t-as="msg">
+                                <tr>
+                                    <td t-esc="(msg.date or msg.create_date).strftime('%Y-%m-%d %H:%M') if (msg.date or msg.create_date) else ''"/>
+                                    <td t-esc="msg.author_id.name or ''"/>
+                                    <td>
+                                        <t t-raw="msg.body or ''"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <t t-if="not doc.message_ids">
+                            <tr><td colspan="3">No log history.</td></tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+</odoo>
