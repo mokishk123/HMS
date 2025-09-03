@@ -9,7 +9,7 @@
                 <field name="name" optional="show"/>
                 <field name="capacity" optional="show"/>
                 <field name="is_opened" optional="show"/>
-<!--                <field name="patient_ids" optional="show"/>-->
+                <!--                <field name="patient_ids" optional="show"/>-->
             </tree>
         </field>
     </record>
@@ -20,18 +20,20 @@
         <field name="arch" type="xml">
             <form string="Hms Patients">
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="capacity"/>
-                            <field name="is_opened"/>
-                        </group>
-                        <group>
-                            <field name="patient_ids" widget="many2many_tags"/>
-                        </group>
-                    </group>
+                    <notebook>
+                        <page string="Department Info">
+                            <group>
+                                <field name="name"/>
+                                <field name="capacity"/>
+                                <field name="is_opened"/>
+                            </group>
+                        </page>
+                        <page string="Patient">
+                            <group>
+                                <field name="patient_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>

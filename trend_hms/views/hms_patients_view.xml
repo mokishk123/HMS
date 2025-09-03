@@ -36,31 +36,41 @@
                     <!--                        options="{'clickable':1}"-->
                 </header>
                 <sheet>
+
                     <group>
-                        <group>
-                            <field name="image" widget="image" class="oe_avatar"/>
-                        </group>
-                        <group>
-                            <field name="first_name"/>
-                            <field name="last_name"/>
-                            <field name="birth_date"/>
-                            <field name="age"/>
-                            <field name="address"/>
-                            <field name="email"/>
-                        </group>
-                        <group>
-                            <field name="history" invisible="age &lt; 50"/>
-                            <field name="cr_ratio" required="pcr"/>
-                            <field name="blood_type"/>
-                            <field name="pcr"/>
-                        </group>
-                        <group>
-                            <field name="department_id" domain="[('is_opened', '=', True)]"/>
-                            <field name="capacity" invisible="not department_id"/>
-                            <field name="doctor_ids" readonly="not department_id" widget="many2many_tags"/>
-                        </group>
+                        <field name="image" widget="image" class="oe_avatar"/>
                     </group>
+
                     <notebook>
+                        <page string="Patient Info">
+                            <group>
+                                <field name="first_name"/>
+                                <field name="last_name"/>
+                                <field name="birth_date"/>
+                                <field name="age"/>
+                                <field name="address"/>
+                                <field name="email"/>
+                            </group>
+                        </page>
+
+                        <page string="Patient Health Info">
+                            <group>
+                                <field name="history" invisible="age &lt; 50"/>
+                                <field name="cr_ratio" required="pcr"/>
+                                <field name="blood_type"/>
+                                <field name="pcr"/>
+                            </group>
+                        </page>
+
+                        <page string="Department">
+                            <group>
+                                <field name="department_id" domain="[('is_opened', '=', True)]"/>
+                                <field name="capacity" invisible="not department_id"/>
+                                <field name="doctor_ids" groups="trend_hms.hms_manager" readonly="not department_id"
+                                       widget="many2many_tags"/>
+                            </group>
+                        </page>
+
                         <page string="Log History">
                             <field name="log_history_ids">
                                 <tree>
@@ -70,7 +80,9 @@
                                 </tree>
                             </field>
                         </page>
+
                     </notebook>
+
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>
